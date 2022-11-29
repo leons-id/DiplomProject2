@@ -35,11 +35,16 @@ class Ui(QWidget):
         self.main_tab.addTab(self.main_data_tab, "Данные")
         self.data_tab_table_cont = SimpleContainer()
         self.main_data_tab.addTab(self.data_tab_table_cont, "Таблица данных")
+        self.data_update_btn = QPushButton("Обновить")
+        self.data_tab_table_cont.grid.addWidget(self.data_update_btn, 0, 0)
         self.data_tab_table = SimpleTable()
-        self.data_tab_table_cont.grid.addWidget(self.data_tab_table, 0, 0)
+        self.data_tab_table_cont.grid.addWidget(self.data_tab_table, 1, 0)
 
         self.data_tab_filter_cont = SimpleContainer()
         self.main_data_tab.addTab(self.data_tab_filter_cont, "Управление данными")
+        self.data_tab_filter_cont_addbtn = QPushButton("Получить из файла")
+        self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_cont_addbtn, 0, 0)
+        self.data_tab_filter_cont_addbtn.clicked.connect(lambda: self.contr.getDataFromFile(self.showFileDialog()))
 
         self.main_graph_tab = QTabWidget()
         self.main_tab.addTab(self.main_graph_tab, "Графики")
@@ -50,18 +55,29 @@ class Ui(QWidget):
 
         self.graph_tab2 = SimpleGraphContainer()
         self.main_graph_tab.addTab(self.graph_tab2, "Гистограмма среднего потребления")
-        self.graph_tab2_mtab = QTabWidget()
-        self.graph_tab2.grid.addWidget(self.graph_tab2_mtab, 0, 0)
-        self.graph_tab2_param1 = YearMonthParamTable()
-        self.graph_tab2_mtab.addTab(self.graph_tab2_param1, "Фильтр")
-        self.graph_tab2_param2 = SpinParamTable()
-        self.graph_tab2_mtab.addTab(self.graph_tab2_param2, "Диапазоны")
-
+        self.graph_tab2_tab = QTabWidget()
+        self.graph_tab2.grid.addWidget(self.graph_tab2_tab, 1, 0)
+        self.graph_tab2_tab1 = YearMonthParamTable()
+        self.graph_tab2_tab.addTab(self.graph_tab2_tab1, "Параметры")
+        self.graph_tab2_tab2 = SpinParamTable()
+        self.graph_tab2_tab.addTab(self.graph_tab2_tab2, "Диапазоны")
 
 
 
     def updateAll(self):
         pass
+
+    def showFileDialog(self):
+        fname = QFileDialog.getOpenFileName(self, 'Получить данные', filter="*.csv")[0]
+        return fname
+
+
+class SimpleTitledContainer(QGroupBox):
+    def __init__(self, title):
+        super(SimpleTitledContainer, self).__init__()
+        self.setTitle(title)
+        self.grid = QGridLayout()
+        self.setLayout(self.grid)
 
 
 class SimpleContainer(QFrame):
@@ -156,3 +172,6 @@ class YearMonthDayParamTable(YearMonthParamTable):
         super(YearMonthDayParamTable, self).__init__()
         self.day_combo = LabeledCombo("День")
         self.cbox.grid.addWidget(self.day_combo, 4, 0)
+
+
+

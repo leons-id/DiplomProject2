@@ -8,3 +8,8 @@ class Contr:
         self.view = View.View(self)
         self.model.addView(self.view.ui)
         self.view.show()
+
+    def getDataFromFile(self, filename):
+        self.model.getDataFromFile(filename)
+
+
