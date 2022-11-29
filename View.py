@@ -45,6 +45,11 @@ class Ui(QWidget):
         self.data_tab_filter_cont_addbtn = QPushButton("Получить из файла")
         self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_cont_addbtn, 0, 0)
         self.data_tab_filter_cont_addbtn.clicked.connect(lambda: self.contr.getDataFromFile(self.showFileDialog()))
+        # self.data_tab_filter_group_cont = SimpleTitledContainer("Фильтр")
+        # self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_group_cont, 1, 0)
+        self.data_tab_filter_cont_entry_cont = SimpleContainer()
+        self.data_tab_filter_cont_entry_cont_
+        self.data_tab_filter_cont_filter_table = SimpleParamTable()
 
         self.main_graph_tab = QTabWidget()
         self.main_tab.addTab(self.main_graph_tab, "Графики")
@@ -62,14 +67,55 @@ class Ui(QWidget):
         self.graph_tab2_tab2 = SpinParamTable()
         self.graph_tab2_tab.addTab(self.graph_tab2_tab2, "Диапазоны")
 
-
-
     def updateAll(self):
         pass
 
     def showFileDialog(self):
         fname = QFileDialog.getOpenFileName(self, 'Получить данные', filter="*.csv")[0]
         return fname
+
+
+class MyFilter(QFrame):
+    def __init__(self, contr):
+        super(MyFilter, self).__init__()
+        self.contr = contr
+        self.grid = QGridLayout()
+        self.setLayout(self.grid)
+        self.cond1 = MyCombo()
+        self.condList = ["равно",
+                             "не равно",
+                             "больше",
+                             "меньше",
+                             "больше или равно",
+                             "меньше или равно"]
+        self.grid.addWidget(self.cond1, 0, 0)
+        self.cond1.addItems(self.condList)
+        self.cond2 = MyCombo()
+        self.grid.addWidget(self.cond2, 2, 0)
+        self.cond2.addItems(self.condList)
+        self.radio1 = QRadioButton("или")
+        self.grid.addWidget(self.radio1, 1, 0)
+        self.grid.addWidget(self.radio2, 1, 1)
+        self.radio2 = QRadioButton("и")
+        self.radio_group = QButtonGroup()
+        self.radio_group.addButton(self.radio1)
+        self.radio_group.addButton(self.radio2)
+        self.radio_group.buttonClicked.connect(self.contr.radio_filter_clicked)
+
+
+class MyCombo(QComboBox):
+    def __init__(self):
+        super(MyCombo, self).__init__()
+
+
+class MyEntry(QLineEdit):
+    def __init__(self):
+        super(MyEntry, self).__init__()
+
+
+class MySpin(QSpinBox):
+    def __init__(self):
+        super(MySpin, self).__init__()
 
 
 class SimpleTitledContainer(QGroupBox):
@@ -172,6 +218,3 @@ class YearMonthDayParamTable(YearMonthParamTable):
         super(YearMonthDayParamTable, self).__init__()
         self.day_combo = LabeledCombo("День")
         self.cbox.grid.addWidget(self.day_combo, 4, 0)
-
-
-

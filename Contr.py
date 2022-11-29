@@ -12,4 +12,7 @@ class Contr:
     def getDataFromFile(self, filename):
         self.model.getDataFromFile(filename)
 
+    def filterRadioClicked(self, word):
+        pass
+
 
