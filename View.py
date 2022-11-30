@@ -47,9 +47,12 @@ class Ui(QWidget):
         self.data_tab_filter_cont_addbtn.clicked.connect(lambda: self.contr.getDataFromFile(self.showFileDialog()))
         # self.data_tab_filter_group_cont = SimpleTitledContainer("Фильтр")
         # self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_group_cont, 1, 0)
-        self.data_tab_filter_cont_entry_cont = SimpleContainer()
-        self.data_tab_filter_cont_entry_cont_
+        self.data_tab_filter_cont_filter_entry = MyFilter(self.contr)
+        self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_cont_filter_entry, 1, 0)
         self.data_tab_filter_cont_filter_table = SimpleParamTable()
+        self.data_tab_filter_cont.grid.addWidget(self.data_tab_filter_cont_filter_table, 2, 0)
+        self.data_tab_filter_cont_filter_table.addBtn.clicked.connect(
+            lambda: self.contr.filterAddClicked(self.data_tab_filter_cont_filter_entry.getFilterInfo()))
 
         self.main_graph_tab = QTabWidget()
         self.main_tab.addTab(self.main_graph_tab, "Графики")
@@ -82,25 +85,54 @@ class MyFilter(QFrame):
         self.grid = QGridLayout()
         self.setLayout(self.grid)
         self.cond1 = MyCombo()
-        self.condList = ["равно",
-                             "не равно",
-                             "больше",
-                             "меньше",
-                             "больше или равно",
-                             "меньше или равно"]
-        self.grid.addWidget(self.cond1, 0, 0)
+        self.condList = ["",
+                         "равно",
+                         "не равно",
+                         "больше",
+                         "меньше",
+                         "больше или равно",
+                         "меньше или равно"]
+        self.grid.addWidget(self.cond1, 0, 1)
         self.cond1.addItems(self.condList)
         self.cond2 = MyCombo()
-        self.grid.addWidget(self.cond2, 2, 0)
+        self.grid.addWidget(self.cond2, 2, 1)
         self.cond2.addItems(self.condList)
-        self.radio1 = QRadioButton("или")
-        self.grid.addWidget(self.radio1, 1, 0)
-        self.grid.addWidget(self.radio2, 1, 1)
-        self.radio2 = QRadioButton("и")
-        self.radio_group = QButtonGroup()
-        self.radio_group.addButton(self.radio1)
-        self.radio_group.addButton(self.radio2)
-        self.radio_group.buttonClicked.connect(self.contr.radio_filter_clicked)
+        self.grid.addWidget(QLabel("И"), 1, 0)
+        # self.radio1 = QRadioButton("и")
+        # self.radio1.setChecked(True)
+        # self.radio2 = QRadioButton("или")
+        # self.grid.addWidget(self.radio1, 1, 0, 1, 3)
+        # self.grid.addWidget(self.radio2, 1, 1, 1, 3)
+        # self.radio_group = QButtonGroup()
+        # self.radio_group.addButton(self.radio1)
+        # self.radio_group.addButton(self.radio2)
+        # self.radio_names = {self.radio1: "and",
+        #                     self.radio2: "or"}
+        # self.radio_group.buttonClicked.connect(self._on_radio_clicked)
+        self.entry11 = MyCombo()
+        self.entry11.setEditable(False)
+        self.entry12 = MyCombo()
+        self.entry12.setEditable(True)
+        self.entry21 = MyCombo()
+        self.entry21.setEditable(False)
+        self.entry22 = MyCombo()
+        self.entry22.setEditable(True)
+        self.grid.addWidget(self.entry11, 0, 0)
+        self.grid.addWidget(self.entry12, 0, 2)
+        self.grid.addWidget(self.entry21, 2, 0)
+        self.grid.addWidget(self.entry22, 2, 2)
+
+    def getFilterInfo(self):
+        result = [{"arg": self.entry11.currentText(),
+                   "cond": self.cond1.currentText(),
+                   "value": self.entry12.currentText()},
+                  {"arg": self.entry21.currentText(),
+                   "cond": self.cond2.currentText(),
+                   "value": self.entry22.currentText()}]
+        return result
+
+    def _on_radio_clicked(self, btn):
+        self.contr.radio_filter_clicked(self.radio_names[btn])
 
 
 class MyCombo(QComboBox):

@@ -12,7 +12,8 @@ class Contr:
     def getDataFromFile(self, filename):
         self.model.getDataFromFile(filename)
 
-    def filterRadioClicked(self, word):
-        pass
+    def filterAddClicked(self, info):
+        # print(info)
+        self.model.createFilterRequest(info)
 
 

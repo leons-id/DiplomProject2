@@ -9,7 +9,7 @@ def main():
     Contr.Contr(model)
     # app.setStyleSheet(Stylesheet_1)
     # print(QStyleFactory.keys())
-    app.setStyle('Fusion')
+    # app.setStyle('Fusion')
     app.exec_()
 
 
